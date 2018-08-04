@@ -1,0 +1,42 @@
+.overlayed-menu { 
+  z-index: 100;
+  width: 20%;
+  height: 500px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+@media only screen and (max-width: 800px) {
+  .overlayed-menu {
+    width: 30%;
+  }
+}
+@media only screen and (max-width: 440px) {
+  .overlayed-menu {
+    width: 40%;
+  }
+}
+.overlayed-menu--visible { 
+  visibility: visible;
+  transition: all .1s linear;
+  opacity: 1;
+}
+.overlayed-menu--hidden { 
+  visibility: hidden;
+  transition: all .1s linear;
+  opacity: 0;
+} 
+.overlayed-menu__item {
+  font-size: 20px;
+  margin: 20px;
+  cursor: pointer;
+}
+.overlayed-menu__item:hover{
+  border-bottom: 3px solid black;
+  transition: border-bottom .1s ease;
+}
