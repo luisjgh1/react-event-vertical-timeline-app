@@ -19,7 +19,8 @@ const months = [
 const QuickNavigation = ({
   dates,
   selectedMonths,
-  onYearSelect
+  onYearSelect,
+  onMonthSelect
 })=>
   <div className='quick-navigation'>
     {dates.map((date, index)=> 
@@ -33,7 +34,8 @@ const QuickNavigation = ({
     <div className='quick-navigation__divider'/>
     {months.map((month, index)=> 
       <span
-        key={index} 
+        key={index}
+        onClick={()=> onMonthSelect(index+1)} 
         className={`quick-navigation__element ${
           selectedMonths.filter(e=> e === index + 1).length
             ? 'quick-navigation__element--active'
@@ -48,7 +50,8 @@ const QuickNavigation = ({
 QuickNavigation.propTypes = {
   dates: PropTypes.array,
   selectedMonths: PropTypes.array,
-  onYearSelect: PropTypes.func.isRequired
+  onYearSelect: PropTypes.func.isRequired,
+  onMonthSelect: PropTypes.func.isRequired
 }
 
 export default QuickNavigation

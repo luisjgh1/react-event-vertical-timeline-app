@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import VerticalTimelineElement from './VerticalTimelineElement'
-import {Transition} from 'react-transition-group'
+import { Transition } from 'react-transition-group'
+import { Element } from 'react-scroll'
 
 const defaultStyle = {
   transition: `opacity 300ms ease-in-out`,
@@ -12,10 +13,10 @@ const defaultStyle = {
 
 const transitionStyles = {
   entering: { opacity: 0 },
-  entered:  { opacity: 1 },
+  entered: { opacity: 1 },
 }
 
-const formatDate = (date)=> {
+const formatDate = date => {
   const months = [
     'January',
     'February',
@@ -26,31 +27,31 @@ const formatDate = (date)=> {
     'July',
     'August',
     'September',
-    'October', 
+    'October',
     'November',
     'December'
-  ] 
+  ]
   const [year, month] = date.split('-')
   return `${months[month - 1]}, ${year}`
 }
 
 const VerticalTimeline = ({
-  animate, 
-  data, 
+  animate,
+  data,
   className,
   inProp
 }) => {
   return (
     <Transition in={inProp} timeout={300}>
       {
-        (state) => (   
+        state => (
           <div
             className={classNames(className, 'vertical-timeline', {
               'vertical-timeline--animate': animate,
             })}
             style={{
-            ...defaultStyle,
-            ...transitionStyles[state]
+              ...defaultStyle,
+              ...transitionStyles[state]
             }}
           >
             <div className='vertical-timeline--now'>
@@ -59,28 +60,29 @@ const VerticalTimeline = ({
               </div>
             </div>
             {
-              data.Objects.map((event, index) =>
+              data.map((event, index) =>
                 <VerticalTimelineElement
-                  className="vertical-timeline-element--work"
                   date={formatDate(event.Date)}
                   key={index}
                 >
-                  <span dangerouslySetInnerHTML={{ __html: event.HTML }} /> 
-                  <h3 className="vertical-timeline-element-title">{event.Title}</h3>
-                  <p>
-                    {event.ShortDescription}
-                  </p>
+                  <Element name={event.id}>
+                    <img className='vertical-timeline-element__image' alt='Event' src={event.URL}/>
+                    <h3 className="vertical-timeline-element-title">{event.Title}</h3>
+                    <p>
+                      {event.ShortDescription}
+                    </p>
+                  </Element>
                 </VerticalTimelineElement>
               )
             }
           </div>
         )
       }
-    
-  </Transition> 
+
+    </Transition>
   )
 }
-  
+
 
 VerticalTimeline.propTypes = {
   data: PropTypes.object,

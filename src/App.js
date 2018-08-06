@@ -2,6 +2,8 @@
 import React from 'react';
 import mockup from './mockup'
 import timelineMockups from './timelineMockups'
+import uuid from 'uuid/v1'
+import { scroller } from 'react-scroll'
 
 import { VerticalTimeline } from './components/VerticalTimeline'
 import QuickNavigation from './components/QuickNavigation'
@@ -29,6 +31,8 @@ export default class App extends React.Component {
     const selectedTimelineData = mockup.timelineDetails.filter(
       timelineObject=> timelineObject.Name === timeline.Name
     )[0]
+    const newObjects = selectedTimelineData.Objects
+      .map(object=> ({...object, id: uuid()}))
     this.setState({
       inProp: false,
       menuVisible: false 
@@ -40,15 +44,30 @@ export default class App extends React.Component {
       inProp: true,
       selectedTimeline: timeline,
       selectedDate: timeline.Dates[0],
-      selectedTimelineData,
+      selectedTimelineData: {
+        ...selectedTimelineData, Objects: newObjects  
+      },
     }))
   }
 
   handleYearSelect = (date)=> {
+    console.log(date)
     this.setState({
       selectedDate: date
     })
-    setTimeout(()=> window.scrollBy(0, 100), 1000)
+  }
+
+  handleMonthSelect = (month)=> {
+    const { selectedDate } = this.state
+    const eventId = this.state.selectedTimelineData.Objects.filter(object=> {
+      const [year, eventMonth] = object.Date.split('-')
+      return parseInt(year) === parseInt(selectedDate.Year) && parseInt(month) === parseInt(eventMonth)
+    })[0].id
+    scroller.scrollTo(eventId, {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart'
+    })
   }
 
   render(){
@@ -65,6 +84,7 @@ export default class App extends React.Component {
               dates={this.state.selectedTimeline.Dates}
               selectedMonths={this.state.selectedDate.Months}
               onYearSelect={this.handleYearSelect}
+              onMonthSelect={this.handleMonthSelect}
             />
           )
         }
@@ -73,7 +93,7 @@ export default class App extends React.Component {
           this.state.selectedTimeline && (
             <VerticalTimeline 
               inProp={this.state.inProp}
-              data={this.state.selectedTimelineData}/>
+              data={this.state.selectedTimelineData.Objects}/>
           )
         }
       </React.Fragment>
