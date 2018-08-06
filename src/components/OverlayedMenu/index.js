@@ -11,8 +11,8 @@ const OverlayedMenu = ({
       isVisible ? 'visible' : 'hidden'
     }`}
   >
-    {timelines.map(timeline=> 
-      <span className='overlayed-menu__item' onClick={()=> setter(timeline)}>
+    {timelines.map((timeline, index)=> 
+      <span key={index} className='overlayed-menu__item' onClick={()=> setter(timeline)}>
         {timeline.Name}
       </span>
     )}

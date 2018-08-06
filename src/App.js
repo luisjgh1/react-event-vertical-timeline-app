@@ -1,26 +1,14 @@
 /* eslint-disable global-require, import/no-unresolved, react/no-multi-comp */
 import React from 'react';
-
-import { VerticalTimeline, VerticalTimelineElement } from './components/VerticalTimeline';
-import OverlayedMenu from './components/OverlayedMenu'
 import mockup from './mockup'
 import timelineMockups from './timelineMockups'
-import './App.css';
 
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October', 
-  'November',
-  'December'
-]
+import { VerticalTimeline } from './components/VerticalTimeline'
+import QuickNavigation from './components/QuickNavigation'
+import OverlayedMenu from './components/OverlayedMenu'
+import MenuToggler from './components/OverlayedMenu/MenuToggler'
+
+import './App.css';
 
 export default class App extends React.Component {
   state = {
@@ -56,19 +44,15 @@ export default class App extends React.Component {
     }))
   }
 
-  handleDateSelect = (date)=> {
+  handleYearSelect = (date)=> {
     this.setState({
       selectedDate: date
     })
+    setTimeout(()=> window.scrollBy(0, 100), 1000)
   }
 
   render(){
     const timelines = timelineMockups.Timelines
-    const formatDate = (date)=> { 
-      const [year, month] = date.split('-')
-      return `${months[month - 1]}, ${year}`
-    }
-
     return (
       <React.Fragment>
         <OverlayedMenu 
@@ -77,52 +61,19 @@ export default class App extends React.Component {
           setter={this.handleTimelineSelect}/>
         {
           this.state.selectedTimeline && (
-            <div className='quick-navigation'>
-              {this.state.selectedTimeline.Dates.map(date=> 
-                <span 
-                  className='quick-navigation__element'
-                  onClick={()=> this.handleDateSelect(date)}>
-                  {date.Year}
-                </span>
-              )}
-              <div className='quick-navigation__divider'/>
-              {months.map((month, index)=> 
-                <span 
-                  className={`quick-navigation__element ${
-                    this.state.selectedDate.Months.filter(e=> e === index + 1).length
-                      ? 'quick-navigation__element--active'
-                      : 'quick-navigation__element--disabled'
-                  }`}
-                  >
-                  {month.slice(0, 3)}
-                </span>
-              )}
-            </div>
+            <QuickNavigation
+              dates={this.state.selectedTimeline.Dates}
+              selectedMonths={this.state.selectedDate.Months}
+              onYearSelect={this.handleYearSelect}
+            />
           )
         }
-        <div className='navbar-toggler' onClick={this.handleToggleMenu}>
-          <span className='navbar-toggler__item'></span>
-          <span className='navbar-toggler__item'></span>
-          <span className='navbar-toggler__item'></span>
-        </div>
+        <MenuToggler handleToggleMenu={this.handleToggleMenu}/>
         {
           this.state.selectedTimeline && (
-            <VerticalTimeline inProp={this.state.inProp}>
-              {
-                this.state.selectedTimelineData.Objects.map(event =>
-                  <VerticalTimelineElement
-                    className="vertical-timeline-element--work"
-                    date={formatDate(event.Date)}
-                  >
-                    <span dangerouslySetInnerHTML={{ __html: event.HTML }} /> 
-                    <h3 className="vertical-timeline-element-title">{event.Title}</h3>
-                    <p>
-                      {event.ShortDescription}
-                    </p>
-                  </VerticalTimelineElement>
-                )
-              }
-            </VerticalTimeline>
+            <VerticalTimeline 
+              inProp={this.state.inProp}
+              data={this.state.selectedTimelineData}/>
           )
         }
       </React.Fragment>

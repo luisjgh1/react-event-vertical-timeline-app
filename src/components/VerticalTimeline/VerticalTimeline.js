@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
+
+import VerticalTimelineElement from './VerticalTimelineElement'
 import {Transition} from 'react-transition-group'
 
 const defaultStyle = {
@@ -13,9 +15,28 @@ const transitionStyles = {
   entered:  { opacity: 1 },
 }
 
+const formatDate = (date)=> {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October', 
+    'November',
+    'December'
+  ] 
+  const [year, month] = date.split('-')
+  return `${months[month - 1]}, ${year}`
+}
+
 const VerticalTimeline = ({
   animate, 
-  children, 
+  data, 
   className,
   inProp
 }) => {
@@ -37,7 +58,21 @@ const VerticalTimeline = ({
                 now
               </div>
             </div>
-            {children}
+            {
+              data.Objects.map((event, index) =>
+                <VerticalTimelineElement
+                  className="vertical-timeline-element--work"
+                  date={formatDate(event.Date)}
+                  key={index}
+                >
+                  <span dangerouslySetInnerHTML={{ __html: event.HTML }} /> 
+                  <h3 className="vertical-timeline-element-title">{event.Title}</h3>
+                  <p>
+                    {event.ShortDescription}
+                  </p>
+                </VerticalTimelineElement>
+              )
+            }
           </div>
         )
       }
@@ -48,10 +83,7 @@ const VerticalTimeline = ({
   
 
 VerticalTimeline.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]).isRequired,
+  data: PropTypes.object,
   className: PropTypes.string,
   animate: PropTypes.bool,
 };

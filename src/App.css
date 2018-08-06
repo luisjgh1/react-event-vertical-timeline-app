@@ -11,6 +11,7 @@ body {
 }
 .vertical-timeline-element-content {
   color: black;
+  word-wrap: break-word;
 }
 .vertical-timeline-element--work .vertical-timeline-element-content {
   border-top: 3px solid #2196f3;
