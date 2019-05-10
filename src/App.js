@@ -1,5 +1,5 @@
 /* eslint-disable global-require, import/no-unresolved, react/no-multi-comp */
-import React from 'react';
+import React from 'react'
 import mockup from './mockup'
 import timelineMockups from './timelineMockups'
 import uuid from 'uuid/v1'
@@ -10,7 +10,7 @@ import QuickNavigation from './components/QuickNavigation'
 import OverlayedMenu from './components/OverlayedMenu'
 import MenuToggler from './components/OverlayedMenu/MenuToggler'
 
-import './App.css';
+import './App.css'
 
 export default class App extends React.Component {
   state = {
@@ -28,11 +28,13 @@ export default class App extends React.Component {
   }
 
   handleTimelineSelect = (timeline)=> {
+    console.log(timeline.Name)
+    console.log(mockup)
     const selectedTimelineData = mockup.timelineDetails.filter(
       timelineObject=> timelineObject.Name === timeline.Name
     )[0]
-    const newObjects = selectedTimelineData.Objects
-      .map(object=> ({...object, id: uuid()}))
+    const newObjects = selectedTimelineData.Objects.map(object=> ({...object, id: uuid()}))
+
     this.setState({
       inProp: false,
       menuVisible: false 
@@ -51,7 +53,16 @@ export default class App extends React.Component {
   }
 
   handleYearSelect = (date)=> {
-    console.log(date)
+    const eventId = this.state.selectedTimelineData.Objects.filter(object=> {
+      const year = object.Date.split('-')[0]
+      return parseInt(year) === parseInt(date.Year)
+    })[0].id
+    scroller.scrollTo(eventId, {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart',
+      offset: -50
+    })
     this.setState({
       selectedDate: date
     })
@@ -66,7 +77,8 @@ export default class App extends React.Component {
     scroller.scrollTo(eventId, {
       duration: 800,
       delay: 0,
-      smooth: 'easeInOutQuart'
+      smooth: 'easeInOutQuart',
+      offset: -50
     })
   }
 

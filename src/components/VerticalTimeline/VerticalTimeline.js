@@ -85,7 +85,7 @@ const VerticalTimeline = ({
 
 
 VerticalTimeline.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.array,
   className: PropTypes.string,
   animate: PropTypes.bool,
 };
@@ -93,6 +93,7 @@ VerticalTimeline.propTypes = {
 VerticalTimeline.defaultProps = {
   animate: true,
   className: '',
+  data: []
 };
 
 export default VerticalTimeline;
